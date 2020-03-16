@@ -17,6 +17,11 @@ IN4 = 26
 ENA = 16
 ENB = 13
 
+#Definition of base speeds
+SPEED_LOW  = 25
+SPEED_HIGH = 50
+SPEED_BRAKE = 10
+
 #Set the GPIO port to BCM encoding mode
 GPIO.setmode(GPIO.BCM)
 
@@ -47,8 +52,8 @@ def run():
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.HIGH)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(25)
-    pwm_ENB.ChangeDutyCycle(25)
+    pwm_ENA.ChangeDutyCycle(SPEED_LOW)
+    pwm_ENB.ChangeDutyCycle(SPEED_LOW)
     
 
 #back
@@ -57,8 +62,8 @@ def back():
     GPIO.output(IN2, GPIO.HIGH)
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.HIGH)
-    pwm_ENA.ChangeDutyCycle(25)
-    pwm_ENB.ChangeDutyCycle(25)
+    pwm_ENA.ChangeDutyCycle(SPEED_LOW)
+    pwm_ENB.ChangeDutyCycle(SPEED_LOW)
     
 
 #turn left
@@ -67,8 +72,8 @@ def left():
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.HIGH)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(25)
-    pwm_ENB.ChangeDutyCycle(50)
+    pwm_ENA.ChangeDutyCycle(SPEED_LOW)
+    pwm_ENB.ChangeDutyCycle(SPEED_HIGH)
     
 
 #turn right
@@ -77,8 +82,8 @@ def right():
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(50)
-    pwm_ENB.ChangeDutyCycle(25)
+    pwm_ENA.ChangeDutyCycle(SPEED_HIGH)
+    pwm_ENB.ChangeDutyCycle(SPEED_LOW)
     
 
 #turn left in place
@@ -87,8 +92,8 @@ def spin_left():
     GPIO.output(IN2, GPIO.HIGH)
     GPIO.output(IN3, GPIO.HIGH)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(50)
-    pwm_ENB.ChangeDutyCycle(50)
+    pwm_ENA.ChangeDutyCycle(SPEED_HIGH)
+    pwm_ENB.ChangeDutyCycle(SPEED_HIGH)
    
 
 #turn right in place
@@ -97,8 +102,8 @@ def spin_right():
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.HIGH)
-    pwm_ENA.ChangeDutyCycle(50)
-    pwm_ENB.ChangeDutyCycle(50)
+    pwm_ENA.ChangeDutyCycle(SPEED_HIGH)
+    pwm_ENB.ChangeDutyCycle(SPEED_HIGH)
     
 #back to the right
 def back_to_right():
@@ -106,8 +111,8 @@ def back_to_right():
     GPIO.output(IN2, GPIO.HIGH)
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(50)
-    pwm_ENB.ChangeDutyCycle(50)
+    pwm_ENA.ChangeDutyCycle(SPEED_HIGH)
+    pwm_ENB.ChangeDutyCycle(SPEED_HIGH)
     
 
 #brake
@@ -116,10 +121,21 @@ def brake():
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.LOW)
-    pwm_ENA.ChangeDutyCycle(10)
-    pwm_ENB.ChangeDutyCycle(10)
-    
+    pwm_ENA.ChangeDutyCycle(SPEED_BRAKE)
+    pwm_ENB.ChangeDutyCycle(SPEED_BRAKE)
 
+# Speed up by 10
+def speed_up():
+    SPEED_LOW = SPEED_LOW + 10
+    SPEED_HIGH = SPEED_HIGH + 10
+    run()
+
+# Slow down by 10
+def speed_down():
+    SPEED_LOW = SPEED_LOW - 10
+    SPEED_HIGH = SPEED_HIGH - 10
+    run()
+       
 try:
     motor_init()
     while True:
@@ -139,16 +155,20 @@ try:
         elif char == ord('e'):
             spin_right()
         elif char == ord('x'):
-            brake()              
+            brake()
+        elif char == ord('t'):
+            speed_up()
+        elif char == ord('g'):
+            speed_down()
         elif char == ord('1'):
-            pwm_ENA.ChangeDutyCycle(10)
-            pwm_ENB.ChangeDutyCycle(10)
+            pwm_ENA.ChangeDutyCycle(SPEED_BRAKE)
+            pwm_ENB.ChangeDutyCycle(SPEED_BRAKE)
         elif char == ord('2'):
-            pwm_ENA.ChangeDutyCycle(20)
-            pwm_ENB.ChangeDutyCycle(20)
+            pwm_ENA.ChangeDutyCycle(SPEED_BRAKE * 2)
+            pwm_ENB.ChangeDutyCycle(SPEED_BRAKE * 2)
         elif char == ord('5'):
-            pwm_ENA.ChangeDutyCycle(50)
-            pwm_ENB.ChangeDutyCycle(50)    
+            pwm_ENA.ChangeDutyCycle(SPEED_HIGH)
+            pwm_ENB.ChangeDutyCycle(SPEED_HIGH)    
             
 
 
